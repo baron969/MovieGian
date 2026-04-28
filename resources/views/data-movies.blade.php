@@ -4,6 +4,8 @@
 
 @section('content')
 
+@include('components.alert')
+
 <h1>Data-Movie</h1>
 <table class="table table-hover">
     <thead>
