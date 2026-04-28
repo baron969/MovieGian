@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Services\MovieService;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\StoreMovieRequest;
+use App\Http\Requests\UpdateMovieRequest;
 
 class MovieController extends Controller
 {
@@ -35,26 +35,8 @@ class MovieController extends Controller
         return view('input', compact('categories'));
     }
 
-    public function store(Request $request)
+    public function store(StoreMovieRequest $request)
     {
-        // Validasi data
-        $validator = Validator::make($request->all(), [
-            'id' => ['required', 'string', 'max:255', Rule::unique('movies', 'id')],
-            'judul' => 'required|string|max:255',
-            'category_id' => 'required|integer',
-            'sinopsis' => 'required|string',
-            'tahun' => 'required|integer',
-            'pemain' => 'required|string',
-            'foto_sampul' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
-
-        // Jika validasi gagal, kembali ke halaman input dengan pesan kesalahan
-        if ($validator->fails()) {
-            return redirect('movies/create')
-                ->withErrors($validator)
-                ->withInput();
-        }
-
         $this->movieService->createMovie($request->except('foto_sampul'), $request->file('foto_sampul'));
 
         return redirect('/')->with('success', 'Data berhasil disimpan');
@@ -73,25 +55,8 @@ class MovieController extends Controller
         return view('form-edit', compact('movie', 'categories'));
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateMovieRequest $request, $id)
     {
-        // Validasi data
-        $validator = Validator::make($request->all(), [
-            'judul' => 'required|string|max:255',
-            'category_id' => 'required|integer',
-            'sinopsis' => 'required|string',
-            'tahun' => 'required|integer',
-            'pemain' => 'required|string',
-            'foto_sampul' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
-
-        // Jika validasi gagal, kembali ke halaman edit dengan pesan kesalahan
-        if ($validator->fails()) {
-            return redirect("/movies/edit/{$id}")
-                ->withErrors($validator)
-                ->withInput();
-        }
-
         $this->movieService->updateMovie($id, $request->except('foto_sampul'), $request->file('foto_sampul'));
 
         return redirect('/movies/data')->with('success', 'Data berhasil diperbarui');
