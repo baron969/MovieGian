@@ -24,6 +24,9 @@
               <li class="nav-item">
                 <a class="nav-link" href="/movies/create">Input Movie</a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/movies/data">Data Movie</a>
+              </li>
             </ul>
             <form action="/" class="d-flex" role="search">
               <input class="form-control me-2" type="search" name="search" placeholder="Search" aria-label="Search">
